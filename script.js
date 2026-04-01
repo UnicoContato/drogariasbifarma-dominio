@@ -1,35 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    const header = document.getElementById('header');
+    const navbar = document.getElementById('navbar');
     let lastScrollY = window.scrollY;
-    let ticking = false;
 
     window.addEventListener('scroll', () => {
-        if (!ticking) {
-            window.requestAnimationFrame(() => {
-                if (window.scrollY > 100) {
-                    if (window.scrollY > lastScrollY) {
-                        header.style.transform = 'translateY(-100%)';
-                    } else {
-                        header.style.transform = 'translateY(0)';
-                    }
-                } else {
-                    header.style.transform = 'translateY(0)';
-                }
-                lastScrollY = window.scrollY;
-                ticking = false;
-            });
-            ticking = true;
+        if (window.scrollY > lastScrollY && window.scrollY > 80) {
+            navbar.style.transform = 'translateY(-100%)';
+        } else {
+            navbar.style.transform = 'translateY(0)';
         }
+        lastScrollY = window.scrollY;
     });
 
-    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileLinks = mobileMenu.querySelectorAll('a');
 
-    menuBtn.addEventListener('click', () => {
+    mobileMenuBtn.addEventListener('click', () => {
         mobileMenu.classList.toggle('hidden');
     });
 
@@ -39,51 +26,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const modal = document.getElementById('modal');
-    const openModalBtn = document.getElementById('open-modal');
-    const closeModalX = document.getElementById('close-modal');
-    const closeModalBtn = document.getElementById('close-modal-btn');
+    const btnPrivacidade = document.getElementById('btn-privacidade');
+    const modalPrivacidade = document.getElementById('modal-privacidade');
+    const closeModalBtn = document.getElementById('close-modal');
+    const modalOverlay = document.getElementById('modal-overlay');
 
-    const openModal = (e) => {
-        e.preventDefault();
-        modal.classList.remove('hidden');
+    const openModal = () => {
+        modalPrivacidade.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
     };
 
     const closeModal = () => {
-        modal.classList.add('hidden');
+        modalPrivacidade.classList.add('hidden');
         document.body.style.overflow = 'auto';
     };
 
-    openModalBtn.addEventListener('click', openModal);
-    closeModalX.addEventListener('click', closeModal);
+    btnPrivacidade.addEventListener('click', openModal);
     closeModalBtn.addEventListener('click', closeModal);
-
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
+    modalOverlay.addEventListener('click', closeModal);
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modalPrivacidade.classList.contains('hidden')) {
             closeModal();
-        }
-    });
-
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1
-    };
-
-    const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('fade-in');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    document.querySelectorAll('section').forEach(section => {
-        if(section.id !== 'inicio') {
-            section.style.opacity = '0';
-            observer.observe(section);
         }
     });
 });
